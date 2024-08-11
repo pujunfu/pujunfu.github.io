@@ -1,0 +1,6 @@
+@inproceedings{tan2024synopground,
+  title={SynopGround: A Large-Scale Dataset for Multi-Paragraph Video Grounding from TV Dramas and Synopses},
+  author={Tan, Chaolei and Lin, Zihang and Pu, Junfu and Qi, Zhongang and Pei, Wei-Yi and Qu, Zhi and Wang, Yexin and Shan, Ying and Zheng, Wei-Shi and Hu, Jian-Fan},
+  booktitle={ACM International Conference on Multimedia (ACM MM)},
+  year={2024}
+}
