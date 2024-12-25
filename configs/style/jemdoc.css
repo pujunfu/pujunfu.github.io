@@ -394,3 +394,12 @@ img.img_overview{
 	margin-bottom: 0px;
 	width: 80%;
 }
+
+video.vid_overview{
+	padding: 4px;display:inline-block;max-width:100%;height:auto;
+	border: 2px solid #C8C8C8; 
+	border-radius: 8px; 
+	margin-right: 0px;
+	margin-bottom: 0px;
+	width: 80%;
+}
