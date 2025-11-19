@@ -1,0 +1,6 @@
+@article{pu2025arc,
+  title={ARC-Chapter: Structuring Hour-Long Videos into Navigable Chapters and Hierarchical Summaries},
+  author={Pu, Junfu and Wang, Teng and Ge, Yixiao and Ge, Yuying and Li, Chen and Shan, Ying},
+  journal={arXiv preprint arXiv:2511.14349},
+  year={2025}
+}
