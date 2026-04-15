@@ -1,0 +1,6 @@
+@article{pu2026omniscript,
+  title={OmniScript: Towards Audio-Visual Script Generation for Long-Form Cinematic Video},
+  author={Pu, Junfu and Chen, Yuxin and Wang, Teng and Shan, Ying},
+  journal={arXiv preprint arXiv:2604.11102},
+  year={2026}
+}
