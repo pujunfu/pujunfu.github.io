@@ -1,0 +1,6 @@
+@article{ge2025arc,
+  title={ARC-Hunyuan-Video-7B: Structured Video Comprehension of Real-World Shorts},
+  author={Yuying Ge and Yixiao Ge and Chen Li and Teng Wang and Junfu Pu and Yizhuo Li and Lu Qiu and Jin Ma and Lisheng Duan and Xinyu Zuo and Jinwen Luo and Weibo Gu and Zexuan Li and Xiaojing Zhang and Yangyu Tao and Han Hu and Di Wang and Ying Shan},
+  journal={arXiv preprint arXiv:2507.20939},
+  year={2025}
+}
