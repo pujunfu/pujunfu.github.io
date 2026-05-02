@@ -139,7 +139,427 @@
       <li>PyTorch re-implementation of paper "Dilated Convolutional Network with Iterative Optimization for Coutinuous Sign Language Recognition" (IJCAI'18) [<a href="https://github.com/ustc-slr/DilatedSLR" target="_blank">Code</a>].</li>
     </ul>
 </p>
- 
+
+
+<!-- ================ ARC-Video Series ==================-->
+<style>
+  /* ========== ARC-Video Series · Timeline layout ========================================== */
+  /* Design principle:                                                                         */
+  /*   - Strong typographic hierarchy: Header (Gen + Name + Date) / Body (tagline) /           */
+  /*     Footer (tags + links) clearly separated by whitespace, not by borders.                */
+  /*   - Thin continuous timeline behind the cards = progression axis.                         */
+  /*   - A single compact sub-caption under each card carries the two-axis info,               */
+  /*     so the old duplicated axes-legend and summary-legend are removed.                     */
+  /*   - Layout is pure flex; no absolute-positioned connectors, no SVG, no coordinate math.   */
+  .arcvr-section {
+    position: relative;
+    margin: 10px 0 28px 0;
+    padding: 22px 22px 20px 22px;
+    background: linear-gradient(180deg, #FBFDFE 0%, #F1F7FB 100%);
+    border: 1px solid #DCE8F0;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(7,104,156,0.06);
+    overflow: hidden;
+  }
+  .arcvr-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8FC6E0 0%, #07689C 50%, #034E77 100%);
+  }
+
+  /* Intro paragraph */
+  .arcvr-intro {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #2a2a2a;
+    text-align: justify;
+    margin: 2px 0 22px 0;
+  }
+  .arcvr-intro .arcvr-brand { font-weight: bold; color: #07689C; letter-spacing: 0.3px; }
+
+  /* ===== Evolution strip (ABOVE the cards): a single continuous rail with
+          three milestone dots and two transition labels sitting inside the
+          segments between them. This replaces the previous floating-pill
+          design so the progression reads as one coherent axis. ======== */
+  .arcvr-evolution {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    height: 44px;
+    margin-bottom: 10px;
+  }
+  /* the continuous rail, spanning full width at the vertical center */
+  .arcvr-evolution::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: linear-gradient(90deg, #8FC6E0 0%, #07689C 50%, #034E77 100%);
+    opacity: 0.65;
+    transform: translateY(-50%);
+    z-index: 0;
+  }
+  /* milestone dots on the rail: numbered circles for each generation */
+  .arcvr-evo-node {
+    position: relative;
+    z-index: 2;
+    justify-self: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.2px;
+    box-shadow: 0 0 0 3px #fff, 0 2px 6px rgba(7,104,156,0.28);
+  }
+  .arcvr-evo-node.node-1 { background: linear-gradient(135deg, #8FC6E0 0%, #5FAACB 100%); }
+  .arcvr-evo-node.node-2 { background: linear-gradient(135deg, #3B8CB8 0%, #07689C 100%); }
+  .arcvr-evo-node.node-3 { background: linear-gradient(135deg, #0A5B88 0%, #034E77 100%); }
+  /* transition labels, absolutely positioned over the segments between nodes */
+  .arcvr-evo-label {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    padding: 3px 10px;
+    background: #fff;
+    border: 1px solid #D6E4EE;
+    border-radius: 999px;
+    font-size: 10.5px;
+    line-height: 1.3;
+    color: #445b6c;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(7,104,156,0.06);
+  }
+  .arcvr-evo-label.label-1 { left: 33.333%; }
+  .arcvr-evo-label.label-2 { left: 66.667%; }
+  .arcvr-evo-label strong {
+    color: #07689C;
+    font-weight: 700;
+  }
+  .arcvr-evo-arrow {
+    display: inline-block;
+    color: #07689C;
+    font-size: 9px;
+    margin-right: 4px;
+    transform: translateY(-0.5px);
+  }
+
+  /* ===== Timeline row (3 cards only) ===== */
+  .arcvr-timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .arcvr-card.level-1 { color: #5FAACB; }
+  .arcvr-card.level-2 { color: #07689C; }
+  .arcvr-card.level-3 { color: #034E77; }
+
+  /* ---- Model card ---- */
+  .arcvr-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #E5EEF4;
+    border-top: 3px solid currentColor;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(7,104,156,0.08);
+    padding: 16px 16px 14px 16px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    min-width: 0;
+  }
+  .arcvr-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(7,104,156,0.18);
+  }
+
+  /* -------- Card header: Gen chip + Date (small), then Name (big) -------- */
+  .arcvr-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .arcvr-gen {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.8px;
+    color: #fff;
+    padding: 2px 9px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(7,104,156,0.2);
+  }
+  .arcvr-card.level-1 .arcvr-gen { background: #5FAACB; }
+  .arcvr-card.level-2 .arcvr-gen { background: #07689C; }
+  .arcvr-card.level-3 .arcvr-gen { background: #034E77; }
+  .arcvr-date {
+    font-size: 10.5px;
+    color: #7c95a6;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+  .arcvr-name {
+    font-weight: bold;
+    color: #07689C;
+    font-size: 15px;
+    line-height: 1.3;
+    margin: 2px 0 10px 0;
+  }
+  .arcvr-name .arcvr-sub {
+    color: #8a9aa7;
+    font-weight: normal;
+    font-size: 11.5px;
+    margin-left: 4px;
+  }
+
+  /* -------- Feature tags (right under the model name; single-line compact) -------- */
+  .arcvr-tags {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 4px;
+    margin: 0 0 10px 0;
+    overflow: hidden;   /* keep a single line; extra tags would be clipped rather than wrapped */
+  }
+  .arcvr-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    font-size: 9.5px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.15px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .arcvr-tag-arrow {
+    font-size: 10px;
+    color: #B8CBD8;
+    font-weight: 600;
+    padding: 0;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  /* Color palette for tags — harmonized with the overall blue theme,
+     three hues differentiate functional categories (modality / scope / output) */
+  .arcvr-tag.tag-modality { background: #E6F2F9; color: #0A5B88; border-color: #C9E1EE; }
+  .arcvr-tag.tag-scope    { background: #E8F5EC; color: #2E7D4F; border-color: #C8E5D2; }
+  .arcvr-tag.tag-output   { background: #FDF1E4; color: #A35A18; border-color: #F3D8B6; }
+  .arcvr-tag.tag-method   { background: #F0EAF7; color: #5F3F97; border-color: #DDD1ED; }
+
+  /* -------- Card body (tagline) -------- */
+  .arcvr-tagline {
+    font-size: 12.5px;
+    color: #333;
+    line-height: 1.55;
+    margin-bottom: 12px;
+    flex: 1;  /* push footer to bottom so all cards align */
+  }
+
+  /* -------- Card sub-caption (two-axis info — length × granularity) -------- */
+  .arcvr-caption {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 10.5px;
+    color: #5a7a8e;
+    padding: 6px 0 10px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #D6E4EE;
+  }
+  .arcvr-caption > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .arcvr-caption .arcvr-caption-key {
+    color: #07689C;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .arcvr-caption .arcvr-caption-sep {
+    color: #B8CBD8;
+  }
+
+  /* -------- Card footer: links only -------- */
+  .arcvr-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    font-size: 11.5px;
+  }
+  .arcvr-links a {
+    display: inline-block;
+    padding: 2px 9px;
+    border: 1px solid #CFE0EC;
+    border-radius: 5px;
+    color: #07689C;
+    text-decoration: none;
+    background: #F7FBFD;
+    transition: all 0.15s ease;
+  }
+  .arcvr-links a:hover {
+    background: #07689C; color: #fff; border-color: #07689C;
+  }
+
+  /* ---- Responsive: stack vertically on narrow screens ---- */
+  @media (max-width: 900px) {
+    .arcvr-evolution {
+      grid-template-columns: 1fr;
+      height: auto;
+      gap: 8px;
+      padding: 6px 0;
+    }
+    .arcvr-evolution::before { display: none; }
+    .arcvr-evo-node { display: none; }
+    .arcvr-evo-label {
+      position: static;
+      transform: none;
+      justify-self: center;
+    }
+    .arcvr-evo-label.label-1,
+    .arcvr-evo-label.label-2 { left: auto; }
+    .arcvr-timeline {
+      grid-template-columns: 1fr;
+      gap: 26px;
+    }
+  }
+</style>
+
+<h2 id="arcvideo">ARC-Video Series &nbsp<a href="#home" style="color:#666; font-size:15px;">[Top]</a></h2>
+
+<div class="arcvr-section">
+  <p class="arcvr-intro">
+    <span class="arcvr-brand">ARC-Video</span> is a family of multimodal LLMs developed at
+    <a href="https://arc.tencent.com/en/index" target="_blank">Tencent ARC Lab</a>,
+    pushing <strong>structured video understanding</strong> along two axes simultaneously &mdash;
+    <em>scaling the target video from seconds to hours</em>, while
+    <em>lifting the output granularity from clips to chapters, and finally to full screenplays</em>.
+    Each generation extends the previous one by tackling a longer video horizon and a higher level of structural abstraction.
+  </p>
+
+  <!-- ========== Evolution strip: milestone nodes + transition labels on one rail ========== -->
+  <div class="arcvr-evolution">
+    <div class="arcvr-evo-node node-1">1</div>
+    <div class="arcvr-evo-node node-2">2</div>
+    <div class="arcvr-evo-node node-3">3</div>
+    <div class="arcvr-evo-label label-1">
+      <span class="arcvr-evo-arrow">▶</span>scale to <strong>long-form &amp; hierarchical chaptering</strong>
+    </div>
+    <div class="arcvr-evo-label label-2">
+      <span class="arcvr-evo-arrow">▶</span>scale to <strong>cinematic &amp; hierarchical script</strong>
+    </div>
+  </div>
+
+  <!-- ========== Timeline: three milestone cards on a shared rail ========== -->
+  <div class="arcvr-timeline">
+
+    <!-- Gen 1 -->
+    <div class="arcvr-card level-1">
+      <div class="arcvr-card-header">
+        <span class="arcvr-gen">GEN 1</span>
+        <span class="arcvr-date">Jul 2025</span>
+      </div>
+      <div class="arcvr-name">ARC-Hunyuan-Video-7B</div>
+      <div class="arcvr-tags">
+        <span class="arcvr-tag tag-modality">Omni</span>
+        <span class="arcvr-tag tag-scope">Short Video</span>
+        <span class="arcvr-tag tag-output">Summarization</span>
+      </div>
+      <div class="arcvr-tagline">
+        Structured comprehension of real-world <strong>short videos</strong> via joint audio&ndash;visual modeling.
+      </div>
+      <div class="arcvr-caption">
+        <span><span class="arcvr-caption-key">Length</span> seconds &ndash; minutes</span>
+        <span class="arcvr-caption-sep">&middot;</span>
+        <span><span class="arcvr-caption-key">Output</span> clip-level</span>
+      </div>
+      <div class="arcvr-links">
+        <a href="https://arxiv.org/abs/2507.20939" target="_blank">Report</a>
+        <a href="https://github.com/TencentARC/ARC-Hunyuan-Video-7B" target="_blank"><i class="fab fa-github"></i>&nbsp;Code</a>
+        <a href="https://arc.tencent.com/zh/ai-demos/multimodal" target="_blank"><i class="fa fa-laptop"></i>&nbsp;Demo</a>
+        <a href="https://tencentarc.github.io/posts/arc-video-announcement" target="_blank">Project</a>
+      </div>
+    </div>
+
+    <!-- Gen 2 -->
+    <div class="arcvr-card level-2">
+      <div class="arcvr-card-header">
+        <span class="arcvr-gen">GEN 2</span>
+        <span class="arcvr-date">Nov 2025 &rarr; Apr 2026</span>
+      </div>
+      <div class="arcvr-name">
+        ARC-Chapter &rarr; OmniChapter<span class="arcvr-sub">(V2)</span>
+      </div>
+      <div class="arcvr-tags">
+        <span class="arcvr-tag tag-modality">Video+ASR</span>
+        <span class="arcvr-tag tag-scope">Hour-Long</span>
+        <span class="arcvr-tag tag-output">Chaptering</span>
+        <span class="arcvr-tag-arrow">&rarr;</span>
+        <span class="arcvr-tag tag-modality">Omni</span>
+      </div>
+      <div class="arcvr-tagline">
+        Structuring <strong>hour-long videos</strong> into navigable chapters with hierarchical summaries; V2 scales to a unified 8B Omni model.
+      </div>
+      <div class="arcvr-caption">
+        <span><span class="arcvr-caption-key">Length</span> tens of minutes &ndash; 1 h</span>
+        <span class="arcvr-caption-sep">&middot;</span>
+        <span><span class="arcvr-caption-key">Output</span> chapter-level</span>
+      </div>
+      <div class="arcvr-links">
+        <a href="./publications/arXiv2025ARCChapter/paper.pdf" target="_blank">Report</a>
+        <a href="https://github.com/TencentARC/ARC-Chapter" target="_blank"><i class="fab fa-github"></i>&nbsp;Code</a>
+        <a href="https://arc.tencent.com/zh/ai-demos/multimodal" target="_blank"><i class="fa fa-laptop"></i>&nbsp;Demo</a>
+        <a href="https://arcchapter.github.io/index_en.html" target="_blank">Project</a>
+      </div>
+    </div>
+
+    <!-- Gen 3 -->
+    <div class="arcvr-card level-3">
+      <div class="arcvr-card-header">
+        <span class="arcvr-gen">GEN 3</span>
+        <span class="arcvr-date">Apr 2026</span>
+      </div>
+      <div class="arcvr-name">OmniScript</div>
+      <div class="arcvr-tags">
+        <span class="arcvr-tag tag-modality">Omni</span>
+        <span class="arcvr-tag tag-scope">Cinematic</span>
+        <span class="arcvr-tag tag-output">Hierarchical Script</span>
+      </div>
+      <div class="arcvr-tagline">
+        Audio-visual <strong>script generation</strong> for long-form cinematic videos &mdash; transcribing movies/dramas into screenplay-style scripts.
+      </div>
+      <div class="arcvr-caption">
+        <span><span class="arcvr-caption-key">Length</span> movies / dramas</span>
+        <span class="arcvr-caption-sep">&middot;</span>
+        <span><span class="arcvr-caption-key">Output</span> script-level</span>
+      </div>
+      <div class="arcvr-links">
+        <a href="./publications/arXiv2026OmniScript/paper.pdf" target="_blank">Report</a>
+        <a href="https://github.com/TencentARC/OmniScript" target="_blank"><i class="fab fa-github"></i>&nbsp;Code</a>
+        <a href="https://arc.tencent.com/zh/ai-demos/multimodal" target="_blank"><i class="fa fa-laptop"></i>&nbsp;Demo</a>
+        <a href="https://arcomniscript.github.io" target="_blank">Project</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
 
 <!-- ================ Publications ==================-->
 <h2 id="publications">Publications &nbsp<a href="#home" style="color:#666; font-size:15px;">[Top]</a></h2>
