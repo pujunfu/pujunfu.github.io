@@ -1,0 +1,6 @@
+@article{wang2026gamehorizon,
+  title={GameHorizon Suite: Multi-Horizon Data and Evaluation in Gameplay},
+  author={Wang, Yiran and Yin, Xingyilang and Pu, Junfu and Wang, Guangzhi and Li, Kaifeng and Ouyang, Mingyu and Sun, Huiqiang and Li, Lingen and Cheng, Cheng and Yu, Wangbo and Chen, Honghao and Cun, Xiaodong and Pun, Chi-Man and Cao, Zhiguo and Shan, Ying},
+  journal={arXiv preprint arXiv:2609.25001},
+  year={2026}
+}

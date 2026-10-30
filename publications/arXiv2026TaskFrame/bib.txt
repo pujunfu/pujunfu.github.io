@@ -1,0 +1,6 @@
+@article{wang2026taskframe,
+  title={TaskFrame: Connecting Task-Level Planning with Frame-Level Control for Game Agents},
+  author={Wang, Guangzhi and Pu, Junfu and Wang, Yiran and Yin, Xingyilang and Chen, Honghao and Cheng, Cheng and Li, Lingen and Zhou, Yinan and Wu, Jiarui and Jiang, Yinuo and Jin, Hongbo and Cun, Xiaodong and Shan, Ying},
+  journal={arXiv preprint arXiv:2610.40276},
+  year={2026}
+}
